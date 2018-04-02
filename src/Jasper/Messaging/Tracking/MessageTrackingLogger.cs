@@ -16,78 +16,78 @@ namespace Jasper.Messaging.Tracking
         public static readonly string Execution = "Execution";
 
         private readonly MessageHistory _history;
-        private readonly IMessageLogger _inner;
+        private readonly IMessageLogger _trackingInnerLogger;
 
 
-        public MessageTrackingLogger(MessageHistory history, IMessageLogger inner)
+        public MessageTrackingLogger(MessageHistory history, IMessageLogger trackingInnerLogger)
         {
             _history = history;
-            _inner = inner;
+            _trackingInnerLogger = trackingInnerLogger;
         }
 
         public void LogException(Exception ex, Guid correlationId = default(Guid), string message = "Exception detected:")
         {
-           _inner.LogException(ex, correlationId, message);
+           _trackingInnerLogger.LogException(ex, correlationId, message);
         }
 
         public void Sent(Envelope envelope)
         {
             _history.Start(envelope, Envelope);
-            _inner.Sent(envelope);
+            _trackingInnerLogger.Sent(envelope);
         }
 
         public void Received(Envelope envelope)
         {
-            _inner.Received(envelope);
+            _trackingInnerLogger.Received(envelope);
         }
 
         public void ExecutionStarted(Envelope envelope)
         {
             _history.Start(envelope, Execution);
-            _inner.ExecutionStarted(envelope);
+            _trackingInnerLogger.ExecutionStarted(envelope);
         }
 
         public void ExecutionFinished(Envelope envelope)
         {
             _history.Complete(envelope, Execution);
-            _inner.ExecutionFinished(envelope);
+            _trackingInnerLogger.ExecutionFinished(envelope);
         }
 
         public void MessageSucceeded(Envelope envelope)
         {
             _history.Complete(envelope, Envelope);
-            _inner.MessageSucceeded(envelope);
+            _trackingInnerLogger.MessageSucceeded(envelope);
         }
 
         public void MessageFailed(Envelope envelope, Exception ex)
         {
             _history.Complete(envelope, Envelope, ex);
-            _inner.MessageFailed(envelope, ex);
+            _trackingInnerLogger.MessageFailed(envelope, ex);
         }
 
         public void NoHandlerFor(Envelope envelope)
         {
-            _inner.NoHandlerFor(envelope);
+            _trackingInnerLogger.NoHandlerFor(envelope);
         }
 
         public void NoRoutesFor(Envelope envelope)
         {
-            _inner.NoRoutesFor(envelope);
+            _trackingInnerLogger.NoRoutesFor(envelope);
         }
 
         public void SubscriptionMismatch(PublisherSubscriberMismatch mismatch)
         {
-            _inner.SubscriptionMismatch(mismatch);
+            _trackingInnerLogger.SubscriptionMismatch(mismatch);
         }
 
         public void MovedToErrorQueue(Envelope envelope, Exception ex)
         {
-            _inner.MovedToErrorQueue(envelope, ex);
+            _trackingInnerLogger.MovedToErrorQueue(envelope, ex);
         }
 
         public void DiscardedEnvelope(Envelope envelope)
         {
-            _inner.DiscardedEnvelope(envelope);
+            _trackingInnerLogger.DiscardedEnvelope(envelope);
         }
 
     }
